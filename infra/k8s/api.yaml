@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: urbis-api, namespace: urbis}
+spec:
+  replicas: 3
+  selector: {matchLabels: {app: urbis-api}}
+  template:
+    metadata: {labels: {app: urbis-api}}
+    spec:
+      containers:
+        - name: api
+          image: urbis/api:0.5.0-alpha.1
+          ports: [{containerPort: 3000}]
+          envFrom: [{secretRef: {name: urbis-api-secrets}}, {configMapRef: {name: urbis-api-config}}]
+          readinessProbe: {httpGet: {path: /v1/health, port: 3000}, initialDelaySeconds: 5, periodSeconds: 10}
+          livenessProbe: {httpGet: {path: /v1/health, port: 3000}, initialDelaySeconds: 15, periodSeconds: 20}
+          resources:
+            requests: {cpu: 250m, memory: 256Mi}
+            limits: {cpu: "2", memory: 1Gi}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: urbis-api, namespace: urbis}
+spec:
+  selector: {app: urbis-api}
+  ports: [{port: 80, targetPort: 3000}]
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: {name: urbis-api, namespace: urbis}
+spec:
+  scaleTargetRef: {apiVersion: apps/v1, kind: Deployment, name: urbis-api}
+  minReplicas: 3
+  maxReplicas: 20
+  behavior:
+    scaleUp: {stabilizationWindowSeconds: 0}
+    scaleDown: {stabilizationWindowSeconds: 300}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: {type: Utilization, averageUtilization: 60}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata: {name: urbis-api, namespace: urbis}
+spec:
+  minAvailable: 2
+  selector: {matchLabels: {app: urbis-api}}

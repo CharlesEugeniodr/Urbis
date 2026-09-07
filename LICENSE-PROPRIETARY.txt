@@ -1,0 +1,7 @@
+URBIS — Cidades Inteligentes, Pessoas Ativas
+Produto de propriedade de Sigma SIHF Soluções Analíticas S/A — CNPJ 01.851.824/0001-38.
+
+Este repositório é material proprietário. Nenhuma licença de uso, reprodução, distribuição,
+modificação, sublicenciamento ou exploração comercial é concedida por este arquivo.
+Direitos de terceiros eventualmente incorporados (bibliotecas, mapas, bases públicas e APIs)
+devem observar suas licenças e termos próprios.

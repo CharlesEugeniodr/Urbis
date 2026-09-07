@@ -1,0 +1,1 @@
+{"name":"@urbis/notification-worker","version":"0.5.0-alpha.1","private":true,"type":"module","scripts":{"start":"tsx src/index.ts"},"dependencies":{"firebase-admin":"^13.0.0","pg":"^8.0.0","tsx":"^4.19.0"}}

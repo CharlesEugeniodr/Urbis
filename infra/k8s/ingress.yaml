@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: urbis-api
+  namespace: urbis
+  annotations:
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+    - hosts: ["staging.urbis.example.invalid"]
+      secretName: urbis-tls
+  rules:
+    - host: staging.urbis.example.invalid
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: urbis-api
+                port:
+                  number: 80

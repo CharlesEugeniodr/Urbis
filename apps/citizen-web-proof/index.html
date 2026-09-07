@@ -1,0 +1,13 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>URBIS — Cidadão</title><link rel="stylesheet" href="/citizen/styles.css"></head><body>
+<header><img src="/assets/urbis-logo.png" alt="URBIS"><div><b>URBIS</b><span>Cidades inteligentes, pessoas ativas</span></div></header>
+<main>
+<section class="card" id="loginCard"><h1>Entrar</h1><p>Prova local da identidade do cidadão. Nenhum CPF é armazenado em claro.</p><label>E-mail<input id="email" value="citizen@urbis.local"></label><label>Senha<input id="password" type="password" value="UrbisLocal!2026"></label><button id="login">Entrar</button><small>Ambiente local de demonstração: senha padrão <code>UrbisLocal!2026</code>. Não usar essas credenciais em produção.</small></section>
+<section class="card hidden" id="reportCard"><div class="topline"><div><h1>Nova ocorrência</h1><p id="who"></p></div><button class="secondary compact" id="logout">Sair</button></div>
+<label>Categoria<select id="category"><option value="LIGHTING">Iluminação pública</option><option value="TRAFFIC_SIGNAL">Semáforo / sinalização</option><option value="WATER">Água / abastecimento</option><option value="ENERGY">Energia elétrica</option><option value="PAVEMENT">Buraco / pavimentação</option><option value="RESILIENCE">Resiliência / risco</option><option value="PUBLIC_SERVICE_QUALITY">Qualidade do serviço</option></select></label>
+<label>Descrição<textarea id="description" maxlength="500" placeholder="Descreva objetivamente o que está ocorrendo"></textarea></label>
+<div class="grid"><label>Latitude<input id="lat" inputmode="decimal"></label><label>Longitude<input id="lon" inputmode="decimal"></label></div><button id="gps" class="secondary">Capturar GPS</button>
+<label>Foto ou vídeo<input id="evidence" type="file" accept="image/jpeg,image/png,image/webp,video/mp4"></label>
+<button id="send">Registrar ocorrência</button><div id="status" class="status"></div></section>
+<section class="card hidden" id="resultCard"><h1>Protocolo</h1><div id="result"></div><button id="newReport" class="secondary">Registrar outra ocorrência</button></section>
+<section class="card hidden" id="historyCard"><h1>Minhas ocorrências</h1><div id="history"></div></section><section class="card hidden" id="communityCard"><h1>Minha participação</h1><div id="community"></div></section>
+</main><footer>Você informa. A cidade evolui. • Produto Sigma SIHF Soluções Analíticas S/A</footer><script type="module" src="/citizen/app.js"></script></body></html>

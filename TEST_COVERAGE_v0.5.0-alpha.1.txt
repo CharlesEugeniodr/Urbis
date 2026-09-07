@@ -1,0 +1,197 @@
+
+> urbis-platform@0.5.0-alpha.1 test:coverage
+> node --experimental-test-coverage --test tests/risk-engine.test.mjs tests/operation-core.test.mjs tests/security-evidence.test.mjs tests/business-core.test.mjs tests/reporting-core.test.mjs
+
+TAP version 13
+# Subtest: prioridade automática e manual
+ok 1 - prioridade automática e manual
+  ---
+  duration_ms: 0.892578
+  type: 'test'
+  ...
+# Subtest: avaliação somente após resolução e pelo autor
+ok 2 - avaliação somente após resolução e pelo autor
+  ---
+  duration_ms: 1.083015
+  type: 'test'
+  ...
+# Subtest: pontuação exige validação humana e base 1 a 4
+ok 3 - pontuação exige validação humana e base 1 a 4
+  ---
+  duration_ms: 0.245871
+  type: 'test'
+  ...
+# Subtest: ranking trimestral agrega pontos
+ok 4 - ranking trimestral agrega pontos
+  ---
+  duration_ms: 0.294544
+  type: 'test'
+  ...
+# Subtest: alerta geográfico filtra ponto dentro de polígono
+ok 5 - alerta geográfico filtra ponto dentro de polígono
+  ---
+  duration_ms: 0.354145
+  type: 'test'
+  ...
+# Subtest: publicação remove endereço, autor e ponto exato
+ok 6 - publicação remove endereço, autor e ponto exato
+  ---
+  duration_ms: 0.294765
+  type: 'test'
+  ...
+# Subtest: geofence bloqueia conclusão distante
+ok 7 - geofence bloqueia conclusão distante
+  ---
+  duration_ms: 0.327535
+  type: 'test'
+  ...
+# Subtest: garantia cruza rua/bairro sem inventar contrato
+ok 8 - garantia cruza rua/bairro sem inventar contrato
+  ---
+  duration_ms: 0.280814
+  type: 'test'
+  ...
+# Subtest: dashboard calcula resolução e satisfação
+ok 9 - dashboard calcula resolução e satisfação
+  ---
+  duration_ms: 0.299603
+  type: 'test'
+  ...
+# Subtest: nearestStreet encontra o próprio segmento da coordenada fonte
+ok 10 - nearestStreet encontra o próprio segmento da coordenada fonte
+  ---
+  duration_ms: 20.18059
+  type: 'test'
+  ...
+# Subtest: criação enriquece ocorrência e detecta duplicidade espaço-temporal
+ok 11 - criação enriquece ocorrência e detecta duplicidade espaço-temporal
+  ---
+  duration_ms: 1.181664
+  type: 'test'
+  ...
+# Subtest: triagem procedente gera despacho e ciclo de OS resolve ocorrência
+ok 12 - triagem procedente gera despacho e ciclo de OS resolve ocorrência
+  ---
+  duration_ms: 0.366713
+  type: 'test'
+  ...
+# Subtest: SLAs do protótipo permanecem explicitamente provisórios
+ok 13 - SLAs do protótipo permanecem explicitamente provisórios
+  ---
+  duration_ms: 0.149556
+  type: 'test'
+  ...
+# Subtest: CSV exportável
+ok 14 - CSV exportável
+  ---
+  duration_ms: 1.002193
+  type: 'test'
+  ...
+# Subtest: PDF mínimo válido
+ok 15 - PDF mínimo válido
+  ---
+  duration_ms: 0.451321
+  type: 'test'
+  ...
+# Subtest: XLSX mínimo é pacote ZIP
+ok 16 - XLSX mínimo é pacote ZIP
+  ---
+  duration_ms: 1.471552
+  type: 'test'
+  ...
+# Subtest: rio em 8 m gera atenção
+ok 17 - rio em 8 m gera atenção
+  ---
+  duration_ms: 1.163958
+  type: 'test'
+  ...
+# Subtest: rio em 9,5 m gera alerta
+ok 18 - rio em 9,5 m gera alerta
+  ---
+  duration_ms: 0.17227
+  type: 'test'
+  ...
+# Subtest: rio em 11 m gera alerta máximo
+ok 19 - rio em 11 m gera alerta máximo
+  ---
+  duration_ms: 0.13235
+  type: 'test'
+  ...
+# Subtest: chuva superior a 50 mm/1h gera alerta
+ok 20 - chuva superior a 50 mm/1h gera alerta
+  ---
+  duration_ms: 0.192811
+  type: 'test'
+  ...
+# Subtest: 100 mm/72h não cruza regra >100; 100,01 cruza
+ok 21 - 100 mm/72h não cruza regra >100; 100,01 cruza
+  ---
+  duration_ms: 1.708599
+  type: 'test'
+  ...
+# Subtest: nível 3 de barragem de mineração promove alerta máximo
+ok 22 - nível 3 de barragem de mineração promove alerta máximo
+  ---
+  duration_ms: 0.227073
+  type: 'test'
+  ...
+# Subtest: senha usa scrypt e não é armazenada em claro
+ok 23 - senha usa scrypt e não é armazenada em claro
+  ---
+  duration_ms: 126.525515
+  type: 'test'
+  ...
+# Subtest: token HS256 valida assinatura, escopo e papel
+ok 24 - token HS256 valida assinatura, escopo e papel
+  ---
+  duration_ms: 1.605014
+  type: 'test'
+  ...
+# Subtest: normalização de email é determinística
+ok 25 - normalização de email é determinística
+  ---
+  duration_ms: 0.186511
+  type: 'test'
+  ...
+# Subtest: evidência base64 tem hash SHA-256 reprodutível
+ok 26 - evidência base64 tem hash SHA-256 reprodutível
+  ---
+  duration_ms: 1.2121
+  type: 'test'
+  ...
+# Subtest: ICI aumenta com corroboração e validação de autoridade
+ok 27 - ICI aumenta com corroboração e validação de autoridade
+  ---
+  duration_ms: 0.62267
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 277.780428
+# start of coverage report
+# ------------------------------------------------------------------------------------
+# file                        | line % | branch % | funcs % | uncovered lines
+# ------------------------------------------------------------------------------------
+# core                        |        |          |         | 
+#  business-core.mjs          |  96.81 |    45.54 |   85.71 | 19 56-57
+#  evidence-core.mjs          |  94.67 |    51.43 |   85.71 | 10-12 56
+#  operation-core.mjs         | 100.00 |    58.82 |   90.91 | 
+#  reporting-core.mjs         | 100.00 |    63.64 |  100.00 | 
+#  risk-engine.mjs            |  82.69 |    71.43 |  100.00 | 30-32 34-35 75-77 83-92
+#  security-core.mjs          |  84.95 |    40.00 |   64.29 | 68-71 79-82 87-92
+# tests                       |        |          |         | 
+#  business-core.test.mjs     | 100.00 |   100.00 |  100.00 | 
+#  operation-core.test.mjs    | 100.00 |   100.00 |  100.00 | 
+#  reporting-core.test.mjs    | 100.00 |   100.00 |  100.00 | 
+#  risk-engine.test.mjs       | 100.00 |   100.00 |  100.00 | 
+#  security-evidence.test.mjs | 100.00 |   100.00 |  100.00 | 
+# ------------------------------------------------------------------------------------
+# all files                   |  93.30 |    57.84 |   89.38 | 
+# ------------------------------------------------------------------------------------
+# end of coverage report

@@ -1,0 +1,1 @@
+{"name":"@urbis/web-central","version":"0.5.0-alpha.1","private":true,"scripts":{"dev":"vite","build":"tsc -b && vite build"},"dependencies":{"@vitejs/plugin-react":"latest","echarts":"latest","mapbox-gl":"latest","react":"latest","react-dom":"latest"},"devDependencies":{"typescript":"latest","vite":"latest","@types/react":"latest","@types/react-dom":"latest"}}

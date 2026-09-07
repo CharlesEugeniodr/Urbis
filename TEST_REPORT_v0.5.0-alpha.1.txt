@@ -1,0 +1,370 @@
+
+> urbis-platform@0.5.0-alpha.1 test:all
+> npm run test:core && npm run test:territory && npm run test:operation && npm run test:security && npm run test:business && npm run test:reporting && npm run test:e2e && npm run validate:data && npm run test:release
+
+
+> urbis-platform@0.5.0-alpha.1 test:core
+> node --test tests/risk-engine.test.mjs
+
+TAP version 13
+# Subtest: rio em 8 m gera atenção
+ok 1 - rio em 8 m gera atenção
+  ---
+  duration_ms: 1.541958
+  type: 'test'
+  ...
+# Subtest: rio em 9,5 m gera alerta
+ok 2 - rio em 9,5 m gera alerta
+  ---
+  duration_ms: 0.190057
+  type: 'test'
+  ...
+# Subtest: rio em 11 m gera alerta máximo
+ok 3 - rio em 11 m gera alerta máximo
+  ---
+  duration_ms: 0.168374
+  type: 'test'
+  ...
+# Subtest: chuva superior a 50 mm/1h gera alerta
+ok 4 - chuva superior a 50 mm/1h gera alerta
+  ---
+  duration_ms: 0.197989
+  type: 'test'
+  ...
+# Subtest: 100 mm/72h não cruza regra >100; 100,01 cruza
+ok 5 - 100 mm/72h não cruza regra >100; 100,01 cruza
+  ---
+  duration_ms: 0.260153
+  type: 'test'
+  ...
+# Subtest: nível 3 de barragem de mineração promove alerta máximo
+ok 6 - nível 3 de barragem de mineração promove alerta máximo
+  ---
+  duration_ms: 0.149466
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 53.204509
+
+> urbis-platform@0.5.0-alpha.1 test:territory
+> node --test tests/territory-geojson.test.mjs
+
+TAP version 13
+# Subtest: camada operacional contém 10.997 segmentos MultiLineString
+ok 1 - camada operacional contém 10.997 segmentos MultiLineString
+  ---
+  duration_ms: 2.477151
+  type: 'test'
+  ...
+# Subtest: baseline territorial tem 46 bairros e 6 zonas
+ok 2 - baseline territorial tem 46 bairros e 6 zonas
+  ---
+  duration_ms: 0.10583
+  type: 'test'
+  ...
+# Subtest: quarentena preserva 81 geometrias vazias e 1 inválida
+ok 3 - quarentena preserva 81 geometrias vazias e 1 inválida
+  ---
+  duration_ms: 0.594788
+  type: 'test'
+  ...
+# Subtest: cruzamento com CEPs confirma 2.446 CEPs comuns
+ok 4 - cruzamento com CEPs confirma 2.446 CEPs comuns
+  ---
+  duration_ms: 0.097617
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 121.539038
+
+> urbis-platform@0.5.0-alpha.1 test:operation
+> node --test tests/operation-core.test.mjs
+
+TAP version 13
+# Subtest: nearestStreet encontra o próprio segmento da coordenada fonte
+ok 1 - nearestStreet encontra o próprio segmento da coordenada fonte
+  ---
+  duration_ms: 17.950776
+  type: 'test'
+  ...
+# Subtest: criação enriquece ocorrência e detecta duplicidade espaço-temporal
+ok 2 - criação enriquece ocorrência e detecta duplicidade espaço-temporal
+  ---
+  duration_ms: 0.928782
+  type: 'test'
+  ...
+# Subtest: triagem procedente gera despacho e ciclo de OS resolve ocorrência
+ok 3 - triagem procedente gera despacho e ciclo de OS resolve ocorrência
+  ---
+  duration_ms: 0.430841
+  type: 'test'
+  ...
+# Subtest: SLAs do protótipo permanecem explicitamente provisórios
+ok 4 - SLAs do protótipo permanecem explicitamente provisórios
+  ---
+  duration_ms: 0.161774
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 148.683612
+
+> urbis-platform@0.5.0-alpha.1 test:security
+> node --test tests/security-evidence.test.mjs
+
+TAP version 13
+# Subtest: senha usa scrypt e não é armazenada em claro
+ok 1 - senha usa scrypt e não é armazenada em claro
+  ---
+  duration_ms: 108.785706
+  type: 'test'
+  ...
+# Subtest: token HS256 valida assinatura, escopo e papel
+ok 2 - token HS256 valida assinatura, escopo e papel
+  ---
+  duration_ms: 1.535288
+  type: 'test'
+  ...
+# Subtest: normalização de email é determinística
+ok 3 - normalização de email é determinística
+  ---
+  duration_ms: 0.21885
+  type: 'test'
+  ...
+# Subtest: evidência base64 tem hash SHA-256 reprodutível
+ok 4 - evidência base64 tem hash SHA-256 reprodutível
+  ---
+  duration_ms: 0.402547
+  type: 'test'
+  ...
+# Subtest: ICI aumenta com corroboração e validação de autoridade
+ok 5 - ICI aumenta com corroboração e validação de autoridade
+  ---
+  duration_ms: 0.704674
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 168.540246
+
+> urbis-platform@0.5.0-alpha.1 test:business
+> node --test tests/business-core.test.mjs
+
+TAP version 13
+# Subtest: prioridade automática e manual
+ok 1 - prioridade automática e manual
+  ---
+  duration_ms: 0.716852
+  type: 'test'
+  ...
+# Subtest: avaliação somente após resolução e pelo autor
+ok 2 - avaliação somente após resolução e pelo autor
+  ---
+  duration_ms: 0.869132
+  type: 'test'
+  ...
+# Subtest: pontuação exige validação humana e base 1 a 4
+ok 3 - pontuação exige validação humana e base 1 a 4
+  ---
+  duration_ms: 0.236617
+  type: 'test'
+  ...
+# Subtest: ranking trimestral agrega pontos
+ok 4 - ranking trimestral agrega pontos
+  ---
+  duration_ms: 0.259872
+  type: 'test'
+  ...
+# Subtest: alerta geográfico filtra ponto dentro de polígono
+ok 5 - alerta geográfico filtra ponto dentro de polígono
+  ---
+  duration_ms: 0.31167
+  type: 'test'
+  ...
+# Subtest: publicação remove endereço, autor e ponto exato
+ok 6 - publicação remove endereço, autor e ponto exato
+  ---
+  duration_ms: 0.263889
+  type: 'test'
+  ...
+# Subtest: geofence bloqueia conclusão distante
+ok 7 - geofence bloqueia conclusão distante
+  ---
+  duration_ms: 0.341967
+  type: 'test'
+  ...
+# Subtest: garantia cruza rua/bairro sem inventar contrato
+ok 8 - garantia cruza rua/bairro sem inventar contrato
+  ---
+  duration_ms: 0.195695
+  type: 'test'
+  ...
+# Subtest: dashboard calcula resolução e satisfação
+ok 9 - dashboard calcula resolução e satisfação
+  ---
+  duration_ms: 0.437861
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 59.699869
+
+> urbis-platform@0.5.0-alpha.1 test:reporting
+> node --test tests/reporting-core.test.mjs
+
+TAP version 13
+# Subtest: CSV exportável
+ok 1 - CSV exportável
+  ---
+  duration_ms: 0.903545
+  type: 'test'
+  ...
+# Subtest: PDF mínimo válido
+ok 2 - PDF mínimo válido
+  ---
+  duration_ms: 0.331801
+  type: 'test'
+  ...
+# Subtest: XLSX mínimo é pacote ZIP
+ok 3 - XLSX mínimo é pacote ZIP
+  ---
+  duration_ms: 0.83423
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 61.506215
+
+> urbis-platform@0.5.0-alpha.1 test:e2e
+> node --test tests/local-probe-e2e.test.mjs
+
+TAP version 13
+# Subtest: RBAC bloqueia lista operacional para cidadão
+ok 1 - RBAC bloqueia lista operacional para cidadão
+  ---
+  duration_ms: 556.571232
+  type: 'test'
+  ...
+# Subtest: fluxo autenticado: cidadão → ocorrência → evidência → ICI → triagem → OS → resolução
+ok 2 - fluxo autenticado: cidadão → ocorrência → evidência → ICI → triagem → OS → resolução
+  ---
+  duration_ms: 36.929779
+  type: 'test'
+  ...
+# Subtest: idempotência autenticada por clientRequestId impede protocolo duplicado por retry
+ok 3 - idempotência autenticada por clientRequestId impede protocolo duplicado por retry
+  ---
+  duration_ms: 7.502863
+  type: 'test'
+  ...
+# Subtest: avaliação, pontuação validada e ranking trimestral funcionam sem pontuação automática
+ok 4 - avaliação, pontuação validada e ranking trimestral funcionam sem pontuação automática
+  ---
+  duration_ms: 5.420033
+  type: 'test'
+  ...
+# Subtest: equipe de campo recebe OS atribuída e geofence valida posição
+ok 5 - equipe de campo recebe OS atribuída e geofence valida posição
+  ---
+  duration_ms: 11.436362
+  type: 'test'
+  ...
+# Subtest: transparência, alertas, notificações e relatórios preservam requisitos
+ok 6 - transparência, alertas, notificações e relatórios preservam requisitos
+  ---
+  duration_ms: 9.003134
+  type: 'test'
+  ...
+# Subtest: WebSocket exige token operacional e recebe atualização
+ok 7 - WebSocket exige token operacional e recebe atualização
+  ---
+  duration_ms: 8.235835
+  type: 'test'
+  ...
+# Subtest: cadastro com CPF armazena apenas impressão HMAC e permite login por CPF
+ok 8 - cadastro com CPF armazena apenas impressão HMAC e permite login por CPF
+  ---
+  duration_ms: 77.857153
+  type: 'test'
+  ...
+# Subtest: LGPD registra solicitação sem apagar automaticamente evidência pública/administrativa
+ok 9 - LGPD registra solicitação sem apagar automaticamente evidência pública/administrativa
+  ---
+  duration_ms: 4.877054
+  type: 'test'
+  ...
+# Subtest: FIELD_AGENT não acessa nem altera ocorrência fora de equipe atribuída
+ok 10 - FIELD_AGENT não acessa nem altera ocorrência fora de equipe atribuída
+  ---
+  duration_ms: 11.581076
+  type: 'test'
+  ...
+# Subtest: equipe atribuída envia evidência BEFORE/AFTER e rota de fallback é explicitamente identificada
+ok 11 - equipe atribuída envia evidência BEFORE/AFTER e rota de fallback é explicitamente identificada
+  ---
+  duration_ms: 10.991345
+  type: 'test'
+  ...
+# Subtest: SSE público recebe evento anonimizado e /metrics expõe Prometheus
+ok 12 - SSE público recebe evento anonimizado e /metrics expõe Prometheus
+  ---
+  duration_ms: 8.829972
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1397.320902
+
+> urbis-platform@0.5.0-alpha.1 validate:data
+> python scripts/validate_datasets.py
+
+OK: 2541 CEPs; 10997 segmentos GIS; 82 registros em quarentena; PLANCON íntegro.
+
+> urbis-platform@0.5.0-alpha.1 test:release
+> python scripts/validate_release.py
+
+OK: release 0.5.0-alpha.1; OpenAPI/documentation/version/YAML/JSON checks passed.

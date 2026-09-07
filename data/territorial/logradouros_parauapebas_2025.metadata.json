@@ -1,0 +1,115 @@
+{
+  "dataset_code": "PARAUAPEBAS_LOGRADOUROS_2025",
+  "source_file": "Logradouros 2025 2.geojson",
+  "source_layer_name": "ruas_cep_wgs",
+  "source_envelope_success": true,
+  "source_crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "source_sha256": "3427a3a68619e2be3ca43ff279304f9776b413ce0c1135dce77a237f5618f05b",
+  "operational_sha256": "51a8cd70a83aadfd6fc2f14588a7e01fad5fbab7c23833464a6a63a596f3c347",
+  "source_feature_count": 11079,
+  "operational_feature_count": 10997,
+  "quarantine_feature_count": 82,
+  "quarantine_by_reason": {
+    "EMPTY_GEOMETRY": 81,
+    "INVALID_GEOMETRY": 1
+  },
+  "geometry_type": "MultiLineString",
+  "bbox_crs84": [
+    -49.918159086224975,
+    -6.213007259859656,
+    -49.82678283207194,
+    -5.938266840521852
+  ],
+  "total_geometry_length_km_epsg31982": 1152.37,
+  "unique_street_names": 2257,
+  "unique_neighborhoods": 46,
+  "unique_zones": 6,
+  "unique_ceps_in_geometry_including_sem_cep": 2453,
+  "unique_valid_ceps_in_geometry": 2452,
+  "ceps_pdf_reference_count": 2541,
+  "ceps_common_geometry_pdf": 2446,
+  "ceps_geometry_not_in_pdf": [
+    "68310-212",
+    "68313-211",
+    "68313-351",
+    "68313-834",
+    "68315-103",
+    "68317-451"
+  ],
+  "ceps_pdf_not_in_geometry_count": 95,
+  "properties": [
+    "Zona",
+    "agua",
+    "b_correio",
+    "bairro",
+    "caracteris",
+    "categoria_",
+    "cd_tip",
+    "cep",
+    "codigo",
+    "coleta_lix",
+    "conservaca",
+    "dificil_ac",
+    "divisa",
+    "drenagem",
+    "entre_ruas",
+    "fid",
+    "id",
+    "iluminacao",
+    "limpeza_ur",
+    "meio_fio",
+    "nm_pos_log",
+    "nm_tip",
+    "nom_antig",
+    "nom_novo",
+    "observac_1",
+    "observacao",
+    "pavimentac",
+    "periodo_co",
+    "periodo_li",
+    "rede_energ",
+    "rede_esgot",
+    "secao",
+    "setor_cole",
+    "setor_fisc",
+    "setor_limp",
+    "tipo",
+    "transporte"
+  ],
+  "data_quality_note": "Registros com geometria vazia ou inválida são preservados em quarentena e não entram na camada operacional. Códigos de atributos são preservados sem inferir semântica não fornecida pela fonte.",
+  "geopackage_file": "logradouros_parauapebas_2025.gpkg",
+  "geopackage_sha256": "f0034b6d15b6897f3006f7074a6c9ed3e2fe99e8425ce6b12943b6a6a7b6858f",
+  "geopackage_layer": "logradouros_2025",
+  "quality_findings": {
+    "exact_duplicate_geometry_groups": 4,
+    "exact_duplicate_geometry_feature_count": 8,
+    "source_object_id_duplicate_values": 67,
+    "source_fid_duplicate_values_operational": 0,
+    "attribute_anomalies": [
+      {
+        "source_index": 10321,
+        "fid": 10322,
+        "street": "Travessa Santa Isabel",
+        "cep": "68317-628",
+        "field": "rede_esgot",
+        "value": -2147483643.0000002,
+        "action": "preserved_unmodified_requires_source_dictionary_or_correction"
+      },
+      {
+        "source_index": 10589,
+        "fid": 10590,
+        "street": "Travessa Limoeiro",
+        "cep": "68320-220",
+        "field": "nm_tip",
+        "value": "Travssa",
+        "action": "preserved_unmodified_probable_typo_not_auto_corrected"
+      }
+    ],
+    "note": "Duplicidades e anomalias de atributos não foram eliminadas automaticamente porque podem refletir segmentação, sobreposição ou codificação da fonte."
+  }
+}

@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: urbis-notification-worker, namespace: urbis}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: urbis-notification-worker}}
+  template:
+    metadata: {labels: {app: urbis-notification-worker}}
+    spec:
+      containers:
+        - name: worker
+          image: urbis/notification-worker:0.5.0-alpha.1
+          envFrom: [{secretRef: {name: urbis-api-secrets}}]

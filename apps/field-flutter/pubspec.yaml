@@ -1,0 +1,21 @@
+name: urbis_field
+version: 0.5.0-alpha.1+5
+description: URBIS — aplicativo da equipe de campo, ordens de serviço, rota, GPS e evidência antes/depois.
+publish_to: none
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.2
+  geolocator: ^13.0.1
+  image_picker: ^1.1.2
+  flutter_secure_storage: ^9.2.2
+  firebase_core: ^3.15.2
+  firebase_messaging: ^15.2.10
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter:
+  uses-material-design: true

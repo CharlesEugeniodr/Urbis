@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+scrape_configs:
+  - job_name: urbis-api
+    static_configs:
+      - targets: ['api:3000']
+    metrics_path: /metrics
+  - job_name: urbis-local-proof
+    static_configs:
+      - targets: ['host.docker.internal:3100']
+    metrics_path: /metrics

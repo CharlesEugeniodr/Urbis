@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: {name: urbis-api-config, namespace: urbis}
+data:
+  NODE_ENV: production
+  PORT: "3000"
+  DB_POOL_MAX: "40"
+  TERRITORY_SNAP_MAX_M: "120"
+  DUPLICATE_RADIUS_M: "35"
+  DUPLICATE_WINDOW_HOURS: "24"
+  URBIS_OBJECT_STORE_DRIVER: S3
+  S3_REGION: us-east-1
+  S3_BUCKET: urbis-evidence
+  REDIS_URL: redis://redis:6379
+  KAFKA_BROKERS: redpanda:9092

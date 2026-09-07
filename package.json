@@ -1,0 +1,23 @@
+{
+  "name": "urbis-platform",
+  "version": "0.5.0-alpha.1",
+  "private": true,
+  "description": "URBIS — plataforma de inteligência urbana georreferenciada",
+  "scripts": {
+    "test:core": "node --test tests/risk-engine.test.mjs",
+    "validate:data": "python scripts/validate_datasets.py",
+    "probe": "node tools/local-probe-server.mjs",
+    "test:territory": "node --test tests/territory-geojson.test.mjs",
+    "test:all": "npm run test:core && npm run test:territory && npm run test:operation && npm run test:security && npm run test:business && npm run test:reporting && npm run test:e2e && npm run validate:data && npm run test:release",
+    "test:operation": "node --test tests/operation-core.test.mjs",
+    "test:e2e": "node --test tests/local-probe-e2e.test.mjs",
+    "test:security": "node --test tests/security-evidence.test.mjs",
+    "test:business": "node --test tests/business-core.test.mjs",
+    "test:reporting": "node --test tests/reporting-core.test.mjs",
+    "test:coverage": "node --experimental-test-coverage --test tests/risk-engine.test.mjs tests/operation-core.test.mjs tests/security-evidence.test.mjs tests/business-core.test.mjs tests/reporting-core.test.mjs",
+    "test:release": "python scripts/validate_release.py"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

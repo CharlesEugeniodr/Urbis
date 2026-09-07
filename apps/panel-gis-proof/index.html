@@ -1,0 +1,42 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>URBIS — Núcleo Operacional</title><link rel="stylesheet" href="/panel/styles.css"></head>
+<body>
+<header><div><strong>URBIS</strong><span>Cidades inteligentes, pessoas ativas</span></div><div class="header-right"><div id="wsState" class="badge warning">TEMPO REAL • CONECTANDO</div><div class="version">v0.5.0-alpha.1</div></div></header>
+<section class="metrics">
+  <article><small>Segmentos GIS</small><b id="mSegments">—</b></article>
+  <article><small>Ocorrências</small><b id="mOccurrences">0</b></article>
+  <article><small>Abertas</small><b id="mOpen">0</b></article>
+  <article><small>Despachadas</small><b id="mDispatched">0</b></article>
+  <article><small>Em atendimento</small><b id="mService">0</b></article>
+  <article><small>Resolvidas</small><b id="mResolved">0</b></article>
+  <article><small>Bairros</small><b id="mNeighborhoods">—</b></article>
+  <article><small>Quarentena GIS</small><b id="mQuarantine">—</b></article>
+  <article><small>SLA cumprido</small><b id="mSla">—</b></article>
+  <article><small>Satisfação</small><b id="mRating">—</b></article>
+  <article><small>OS vencidas</small><b id="mOverdue">—</b></article>
+</section>
+<main>
+<aside>
+  <section class="box authbox"><h2>Acesso da Central</h2><label>E-mail<input id="authEmail" value="manager@urbis.local"></label><label>Senha<input id="authPassword" type="password" value="UrbisLocal!2026"></label><button id="authLogin">Entrar</button><div id="authState" class="hint">Autenticação RBAC obrigatória para dados operacionais.</div></section>
+  <section class="box">
+    <h2>Camada territorial</h2>
+    <div class="row2"><label>Zona<select id="zone"><option value="">Todas</option></select></label><label>Bairro<select id="bairro"><option value="">Todos</option></select></label></div>
+    <label>Visualização<select id="mode"><option value="default">Rede</option><option value="pavimentac">Pavimentação</option><option value="drenagem">Drenagem</option><option value="iluminacao">Iluminação</option><option value="rede_esgot">Esgoto</option></select></label>
+    <button id="fit" class="secondary">Enquadrar camada</button>
+  </section>
+
+  <section class="box operational">
+    <h2>Registrar ocorrência</h2>
+    <label>Categoria<select id="category"><option value="LIGHTING">Iluminação pública</option><option value="TRAFFIC_SIGNAL">Semáforo / sinalização</option><option value="WATER">Água / abastecimento</option><option value="ENERGY">Energia elétrica</option><option value="PAVEMENT">Buraco / pavimentação</option><option value="RESILIENCE">Resiliência / risco</option><option value="PUBLIC_SERVICE_QUALITY">Qualidade de serviço</option></select></label>
+    <label>Descrição<textarea id="description" maxlength="500" placeholder="Descreva objetivamente a ocorrência"></textarea></label>
+    <div class="row2"><label>Latitude<input id="lat" inputmode="decimal" placeholder="-6.0"></label><label>Longitude<input id="lon" inputmode="decimal" placeholder="-49.9"></label></div>
+    <div class="row2"><button id="locate" class="secondary">Usar GPS</button><button id="pick" class="secondary">Marcar no mapa</button></div>
+    <button id="submitOccurrence">Registrar e protocolar</button>
+    <div id="formState" class="hint">A ocorrência será georreferenciada na malha real 2025. Envio local de prova, sem dados pessoais.</div>
+  </section>
+
+  <section class="box"><h2>Relatórios</h2><div class="actions"><button data-report="csv">CSV</button><button data-report="xlsx">Excel</button><button data-report="pdf">PDF</button></div><div class="hint">Exportações exigem perfil operacional autorizado.</div></section><section class="box"><h2>Seleção</h2><div id="details" class="details"><b>Selecione um segmento ou ocorrência.</b></div></section>
+</aside>
+<section class="mapwrap"><canvas id="map"></canvas><div class="maplabel">Parauapebas • WGS84 • malha vetorial 2025 • ocorrências em tempo real</div><div id="pickBanner" class="pick-banner hidden">Clique no mapa para posicionar a ocorrência</div></section>
+</main>
+<footer>Produto: Sigma SIHF Soluções Analíticas S/A • Núcleo operacional: protocolo → enriquecimento territorial → triagem → despacho → atendimento → resolução</footer>
+<script type="module" src="/panel/app.js"></script></body></html>

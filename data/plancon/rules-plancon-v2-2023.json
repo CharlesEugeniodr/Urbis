@@ -1,0 +1,46 @@
+{
+  "ruleset": "PLANCON_PARAUAPEBAS",
+  "version": "2-2023",
+  "reference_year": 2023,
+  "source": "Plano de Contingência Municipal para Desastres Naturais e Tecnológicos — Parauapebas/PA — Versão 2 — 2023",
+  "status": "documentary_baseline",
+  "rules": {
+    "river_parauapebas": {
+      "drought_alert_m": 4.0,
+      "drought_attention_m": 5.0,
+      "normal_min_m": 6.0,
+      "normal_max_m": 7.0,
+      "flood_attention_m": 8.0,
+      "flood_alert_m": 9.5,
+      "flood_max_alert_m": 11.0
+    },
+    "rainfall": {
+      "attention_1h_min_mm": 30.0,
+      "attention_1h_max_mm": 50.0,
+      "alert_1h_gt_mm": 50.0,
+      "landslide_alert_72h_gt_mm": 100.0,
+      "prosap_attention_1h_gt_mm": 49.0,
+      "prosap_alert_1h_gt_mm": 95.0
+    },
+    "prosap_reservoir": {
+      "max_alert_conditions": {
+        "height_above_spillway_m_gt": 1.20,
+        "level_gates_open_m_gt": 150.0,
+        "level_gates_closed_m_gt": 150.2
+      }
+    },
+    "wildfire_weather": {
+      "attention": {"temperature_c_gt": 30.0, "wind_kmh_gt": 20.0, "relative_humidity_pct_gt": 21.0, "relative_humidity_pct_lt": 30.0},
+      "alert": {"temperature_c_gt": 35.0, "wind_kmh_gt": 30.0, "relative_humidity_pct_gt": 12.0, "relative_humidity_pct_lt": 20.0}
+    },
+    "dam_emergency": {
+      "mining_plancon_activation_levels": [2, 3],
+      "igarape_ilha_do_coco_plancon_activation_level": 3
+    }
+  },
+  "notes": [
+    "Regras documentais não substituem decisão da autoridade competente.",
+    "Sensores e integrações operacionais atuais devem informar sua própria fonte e timestamp.",
+    "O PLANCON prevê revisão/atualização periódica; esta versão deve permanecer identificada como baseline 2023."
+  ]
+}

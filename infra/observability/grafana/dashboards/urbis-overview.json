@@ -1,0 +1,1 @@
+{"title":"URBIS Overview","schemaVersion":39,"panels":[{"type":"stat","title":"Ocorrências","targets":[{"expr":"urbis_occurrences_total"}],"gridPos":{"h":8,"w":6,"x":0,"y":0}},{"type":"stat","title":"HTTP p95 ms","targets":[{"expr":"urbis_http_request_p95_ms"}],"gridPos":{"h":8,"w":6,"x":6,"y":0}}]}

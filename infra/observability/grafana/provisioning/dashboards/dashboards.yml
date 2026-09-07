@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: URBIS
+    folder: URBIS
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards

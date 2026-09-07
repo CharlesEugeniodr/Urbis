@@ -1,0 +1,32 @@
+tls:
+  options:
+    urbisTLS13:
+      minVersion: VersionTLS13
+http:
+  middlewares:
+    security-headers:
+      headers:
+        contentTypeNosniff: true
+        frameDeny: true
+        referrerPolicy: no-referrer
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        permissionsPolicy: "geolocation=(self), camera=(self), microphone=()"
+    api-ratelimit:
+      rateLimit:
+        average: 200
+        period: 1s
+        burst: 400
+  services:
+    urbis-api:
+      loadBalancer:
+        servers:
+          - url: "http://api:3000"
+  routers:
+    urbis-api:
+      rule: "PathPrefix(`/`)"
+      entryPoints: [websecure]
+      service: urbis-api
+      middlewares: [security-headers, api-ratelimit]
+      tls:
+        options: urbisTLS13
