@@ -19,9 +19,13 @@ health=(ROOT/'apps/api/src/health/health.controller.ts').read_text();ok(VERSION 
 k8s=(ROOT/'infra/k8s/api.yaml').read_text();ok('/v1/health' in k8s,'k8s health probe mismatch')
 for name in ['REQUIREMENTS_TRACEABILITY.md','DATA_MODEL.md','CONFIGURATION.md','DEPLOYMENT.md','TEST_STRATEGY.md','USER_CITIZEN.md','USER_CENTRAL.md','USER_FIELD.md','PRIVACY_POLICY_DRAFT.md','TERMS_OF_USE_DRAFT.md','SECURITY.md']:
     ok((ROOT/'docs'/name).exists(),f'missing docs/{name}')
-for f in ROOT.rglob('*'):
+SKIP_DIRS={'node_modules','dist','.next','build','.git','__pycache__','.dart_tool'}
+def walk_files(pat):
+    for f in ROOT.rglob(pat):
+        if not any(p in SKIP_DIRS for p in f.relative_to(ROOT).parts):yield f
+for f in walk_files('*'):
     if f.is_file() and (f.name.endswith('.tmp') or f.name.endswith('.prev')):errors.append(f'stale temporary file: {f.relative_to(ROOT)}')
-for f in ROOT.rglob('*.json'):
+for f in walk_files('*.json'):
     try:json.loads(f.read_text())
     except Exception as e:errors.append(f'invalid JSON {f.relative_to(ROOT)}: {e}')
 if yaml:
