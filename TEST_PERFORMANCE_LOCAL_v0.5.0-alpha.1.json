@@ -1,0 +1,16 @@
+{
+  "scope": "LOCAL_IN_MEMORY_PROOF_NOT_PRODUCTION",
+  "requests": 10000,
+  "concurrency": 100,
+  "elapsedMs": 2381,
+  "throughputPerSecond": 4199.91,
+  "equivalentPerMinute": 251995,
+  "p95Ms": 43.08,
+  "errors": 0,
+  "errorRate": 0,
+  "acceptanceReference": {
+    "p95Ms": 300,
+    "requestsPerMinute": 10000
+  },
+  "meetsLocalReference": true
+}

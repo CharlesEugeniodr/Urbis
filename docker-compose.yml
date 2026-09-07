@@ -1,0 +1,172 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: urbis
+      POSTGRES_USER: urbis
+      POSTGRES_PASSWORD: urbis
+    ports: ["5432:5432"]
+    volumes:
+      - urbis_pg:/var/lib/postgresql/data
+      - ../db/migrations:/docker-entrypoint-initdb.d:ro
+      - ../data/territorial:/urbis-data:ro
+      - ../data/plancon:/urbis-plancon:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U urbis -d urbis"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: urbis
+      MINIO_ROOT_PASSWORD: change-me-now
+    ports: ["9000:9000", "9001:9001"]
+    volumes: ["urbis_minio:/data"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio: {condition: service_healthy}
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 urbis change-me-now &&
+      mc mb --ignore-existing local/urbis-evidence &&
+      mc anonymous set none local/urbis-evidence
+      "
+
+  api:
+    profiles: ["full"]
+    build:
+      context: ..
+      dockerfile: infra/docker/api.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://urbis:urbis@postgres:5432/urbis
+      REDIS_URL: redis://redis:6379
+      URBIS_OBJECT_STORE_DRIVER: S3
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY_ID: urbis
+      S3_SECRET_ACCESS_KEY: change-me-now
+      S3_BUCKET: urbis-evidence
+      S3_FORCE_PATH_STYLE: "true"
+      URBIS_TOKEN_SECRET: replace-with-at-least-32-characters-before-deploy
+      URBIS_PII_HMAC_SECRET: replace-with-a-different-32-char-secret-before-deploy
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      minio: {condition: service_healthy}
+    ports: ["3000:3000"]
+
+  notification-worker:
+    profiles: ["notifications"]
+    build:
+      context: ..
+      dockerfile: infra/docker/notification-worker.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://urbis:urbis@postgres:5432/urbis
+      FIREBASE_SERVICE_ACCOUNT_JSON: ${FIREBASE_SERVICE_ACCOUNT_JSON:-}
+    depends_on:
+      postgres: {condition: service_healthy}
+
+  redpanda:
+    profiles: ["full"]
+    image: redpandadata/redpanda:v24.2.16
+    command: redpanda start --overprovisioned --smp 1 --memory 1G --reserve-memory 0M --node-id 0 --check=false --kafka-addr PLAINTEXT://0.0.0.0:9092 --advertise-kafka-addr PLAINTEXT://redpanda:9092
+    ports: ["9092:9092"]
+
+  event-relay:
+    profiles: ["events", "full"]
+    build:
+      context: ..
+      dockerfile: infra/docker/event-relay.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://urbis:urbis@postgres:5432/urbis
+      KAFKA_BROKERS: redpanda:9092
+    depends_on:
+      postgres: {condition: service_healthy}
+      redpanda: {condition: service_started}
+
+
+  prometheus:
+    profiles: ["observability", "full"]
+    image: prom/prometheus:v2.55.1
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes: ["./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports: ["9090:9090"]
+
+  loki:
+    profiles: ["observability", "full"]
+    image: grafana/loki:3.2.1
+    command: -config.file=/etc/loki/local-config.yaml
+    ports: ["3101:3100"]
+
+  promtail:
+    profiles: ["observability", "full"]
+    image: grafana/promtail:3.2.1
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./observability/promtail.yml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on: [loki]
+
+
+  grafana:
+    profiles: ["observability", "full"]
+    image: grafana/grafana:11.3.0
+    environment:
+      GF_SECURITY_ADMIN_USER: urbis
+      GF_SECURITY_ADMIN_PASSWORD: change-me-now
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports: ["3001:3000"]
+    depends_on: [prometheus, loki]
+
+  keycloak:
+    profiles: ["identity", "full"]
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: change-me-now
+    ports: ["8080:8080"]
+
+  influxdb:
+    profiles: ["timeseries", "full"]
+    image: influxdb:2.7
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: urbis
+      DOCKER_INFLUXDB_INIT_PASSWORD: change-me-now
+      DOCKER_INFLUXDB_INIT_ORG: sigma-sihf
+      DOCKER_INFLUXDB_INIT_BUCKET: urbis-telemetry
+    ports: ["8086:8086"]
+
+  traefik:
+    profiles: ["gateway", "full"]
+    image: traefik:v3.2
+    command: ["--configFile=/etc/traefik/traefik.yml"]
+    volumes:
+      - ./gateway/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./gateway/dynamic.yml:/etc/traefik/dynamic.yml:ro
+    ports: ["443:443"]
+
+volumes:
+  urbis_pg:
+  urbis_minio:
