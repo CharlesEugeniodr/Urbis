@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URBIS — Plataforma Digital Municipal de Parauapebas</title>
+  <style>
+    :root { --primary: #07507C; --secondary: #2E8B57; --accent: #FF8C00; --bg: #f5f7fa; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: #333; }
+    .hero { background: linear-gradient(135deg, var(--primary) 0%, #0a6da8 100%); color: white; padding: 60px 20px; text-align: center; }
+    .hero h1 { font-size: 3rem; font-weight: 800; letter-spacing: -1px; }
+    .hero p { font-size: 1.2rem; opacity: 0.9; margin-top: 12px; max-width: 700px; margin-left: auto; margin-right: auto; }
+    .hero .badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 16px; font-size: 0.85rem; margin-top: 16px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px; }
+    .card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: transform 0.2s; }
+    .card:hover { transform: translateY(-4px); }
+    .card h3 { font-size: 1.3rem; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+    .card p { color: #666; line-height: 1.6; }
+    .card .icon { font-size: 2rem; }
+    .btn { display: inline-block; background: var(--primary); color: white; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: background 0.2s; margin-top: 16px; }
+    .btn:hover { background: #064068; }
+    .btn.secondary { background: var(--secondary); }
+    .btn.secondary:hover { background: #257048; }
+    .btn.accent { background: var(--accent); }
+    .btn.accent:hover { background: #e07b00; }
+    .section-title { font-size: 1.8rem; color: var(--primary); font-weight: 700; text-align: center; }
+    .section-subtitle { text-align: center; color: #666; margin-top: 8px; font-size: 1.05rem; }
+    .downloads { background: white; border-radius: 16px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-top: 30px; }
+    .download-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-top: 24px; }
+    .download-item { text-align: center; padding: 24px; border: 2px solid #e8ecf1; border-radius: 12px; }
+    .download-item .icon { font-size: 3rem; margin-bottom: 12px; }
+    .download-item h4 { color: var(--primary); font-size: 1.1rem; }
+    .download-item p { color: #888; font-size: 0.9rem; margin: 8px 0; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 30px; }
+    .stat { text-align: center; background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .stat .number { font-size: 2rem; font-weight: 800; color: var(--primary); }
+    .stat .label { font-size: 0.85rem; color: #888; margin-top: 4px; }
+    .access-section { margin-top: 40px; }
+    .access-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+    .access-card { background: white; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .access-card .icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .access-card h4 { color: var(--primary); margin-bottom: 6px; }
+    .access-card p { color: #888; font-size: 0.85rem; margin-bottom: 12px; }
+    footer { background: var(--primary); color: white; text-align: center; padding: 30px 20px; margin-top: 60px; }
+    footer a { color: rgba(255,255,255,0.8); }
+    .tech-badge { display: inline-block; background: #e8ecf1; color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; margin: 2px; }
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>🏙️ URBIS</h1>
+    <p>Plataforma Digital Municipal de Gestão Urbana Georreferenciada</p>
+    <div class="badge">📍 Parauapebas, Pará — v0.5.0-alpha.1</div>
+  </div>
+
+  <div class="container">
+    <div class="stats">
+      <div class="stat"><div class="number">10.997</div><div class="label">Segmentos GIS</div></div>
+      <div class="stat"><div class="number">2.541</div><div class="label">CEPs mapeados</div></div>
+      <div class="stat"><div class="number">6</div><div class="label">Categorias</div></div>
+      <div class="stat"><div class="number">93%</div><div class="label">Cobertura de código</div></div>
+    </div>
+
+    <!-- Downloads -->
+    <div class="downloads">
+      <h2 class="section-title">📱 Downloads</h2>
+      <p class="section-subtitle">Baixe os aplicativos para Android</p>
+      <div class="download-grid">
+        <div class="download-item">
+          <div class="icon">👤</div>
+          <h4>URBIS Cidadão</h4>
+          <p>Registre ocorrências urbanas, acompanhe o status e participe do ranking de cidadania.</p>
+          <a href="https://github.com/CharlesEugeniodr/Urbis/releases/latest/download/URBIS-Cidadao-v0.5.0.apk" class="btn">⬇️ Baixar APK</a>
+        </div>
+        <div class="download-item">
+          <div class="icon">🔧</div>
+          <h4>URBIS Campo</h4>
+          <p>App para equipes de campo: ordens de serviço, rotas, evidências antes/depois.</p>
+          <a href="https://github.com/CharlesEugeniodr/Urbis/releases/latest/download/URBIS-Campo-v0.5.0.apk" class="btn secondary">⬇️ Baixar APK</a>
+        </div>
+        <div class="download-item">
+          <div class="icon">🍎</div>
+          <h4>iOS (em breve)</h4>
+          <p>Versão para iPhone/iPad será disponibilizada após compilação em ambiente macOS.</p>
+          <span class="btn" style="opacity:0.5;pointer-events:none">Em desenvolvimento</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Módulos Web -->
+    <div class="access-section">
+      <h2 class="section-title">🖥️ Módulos Web</h2>
+      <p class="section-subtitle">Acesse o sistema diretamente pelo navegador</p>
+      <div class="access-grid">
+        <div class="access-card">
+          <div class="icon">📊</div>
+          <h4>Painel Central GIS</h4>
+          <p>Central de monitoramento com mapa interativo e dashboard</p>
+          <a href="https://charleseugeniodr.github.io/Urbis/panel/" class="btn">Acessar</a>
+        </div>
+        <div class="access-card">
+          <div class="icon">👤</div>
+          <h4>App Cidadão</h4>
+          <p>Interface web do cidadão para registro de ocorrências</p>
+          <a href="https://charleseugeniodr.github.io/Urbis/citizen/" class="btn secondary">Acessar</a>
+        </div>
+        <div class="access-card">
+          <div class="icon">🔧</div>
+          <h4>App Campo</h4>
+          <p>Interface web para equipes de campo</p>
+          <a href="https://charleseugeniodr.github.io/Urbis/field/" class="btn accent">Acessar</a>
+        </div>
+        <div class="access-card">
+          <div class="icon">📈</div>
+          <h4>Portal Público</h4>
+          <p>Transparência: indicadores abertos para a sociedade</p>
+          <a href="https://charleseugeniodr.github.io/Urbis/public/" class="btn">Acessar</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Funcionalidades -->
+    <div style="margin-top: 50px;">
+      <h2 class="section-title">⚙️ Funcionalidades</h2>
+      <div class="cards">
+        <div class="card">
+          <h3><span class="icon">💡</span> Ocorrências Urbanas</h3>
+          <p>6 categorias: iluminação, trânsito, água, energia, pavimentação e resiliência. GPS + câmera + evidências com hash SHA-256.</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">🗺️</span> GIS Georreferenciado</h3>
+          <p>10.997 segmentos viários mapeados. Localização automática de logradouro, bairro, zona e CEP.</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">🏆</span> Gamificação</h3>
+          <p>Ranking de cidadania com pontuação por ocorrências registradas e avaliações.</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">📋</span> Ordens de Serviço</h3>
+          <p>Despacho automático, timeline de progresso, evidências antes/depois, cálculo de rotas.</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">🔒</span> LGPD</h3>
+          <p>Exportação e exclusão de dados pessoais. Consentimento explícito. Anonimização em relatórios.</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">📊</span> Inteligência Operacional</h3>
+          <p>Dashboard com indicadores, relatórios CSV/XLSX/PDF, alertas automáticos e métricas de SLA.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tecnologias -->
+    <div style="margin-top: 50px; text-align: center;">
+      <h2 class="section-title">🛠️ Stack Tecnológico</h2>
+      <div style="margin-top: 16px;">
+        <span class="tech-badge">Node.js 24</span>
+        <span class="tech-badge">NestJS 11</span>
+        <span class="tech-badge">React 19</span>
+        <span class="tech-badge">Next.js 15</span>
+        <span class="tech-badge">Flutter 3.32</span>
+        <span class="tech-badge">PostgreSQL + PostGIS</span>
+        <span class="tech-badge">Redis</span>
+        <span class="tech-badge">Kafka</span>
+        <span class="tech-badge">Keycloak OIDC</span>
+        <span class="tech-badge">Docker</span>
+        <span class="tech-badge">Kubernetes</span>
+        <span class="tech-badge">Mapbox GL</span>
+        <span class="tech-badge">Leaflet</span>
+        <span class="tech-badge">OpenStreetMap</span>
+        <span class="tech-badge">Firebase FCM</span>
+        <span class="tech-badge">ECharts</span>
+      </div>
+    </div>
+
+    <!-- Credenciais -->
+    <div style="margin-top: 50px;">
+      <h2 class="section-title">🔑 Acesso de Demonstração</h2>
+      <p class="section-subtitle">Use estas credenciais nos módulos web e apps mobile</p>
+      <div style="margin-top: 20px; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+          <thead>
+            <tr style="background: var(--primary); color: white;">
+              <th style="padding: 12px 16px; text-align: left;">Perfil</th>
+              <th style="padding: 12px 16px; text-align: left;">E-mail</th>
+              <th style="padding: 12px 16px; text-align: left;">Senha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:10px 16px">👤 Cidadão</td><td style="padding:10px 16px"><code>citizen@urbis.local</code></td><td style="padding:10px 16px"><code>UrbisLocal!2026</code></td></tr>
+            <tr style="background:#f9fafb"><td style="padding:10px 16px">📡 Operador</td><td style="padding:10px 16px"><code>operator@urbis.local</code></td><td style="padding:10px 16px"><code>UrbisLocal!2026</code></td></tr>
+            <tr><td style="padding:10px 16px">🔧 Campo</td><td style="padding:10px 16px"><code>field@urbis.local</code></td><td style="padding:10px 16px"><code>UrbisLocal!2026</code></td></tr>
+            <tr style="background:#f9fafb"><td style="padding:10px 16px">📊 Gestor</td><td style="padding:10px 16px"><code>manager@urbis.local</code></td><td style="padding:10px 16px"><code>UrbisLocal!2026</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>URBIS</strong> — Plataforma Digital Municipal de Parauapebas</p>
+    <p style="margin-top:8px; opacity:0.7">Prefeitura Municipal de Parauapebas, Pará, Brasil</p>
+    <p style="margin-top:8px"><a href="https://github.com/CharlesEugeniodr/Urbis">📂 Repositório GitHub</a></p>
+  </footer>
+</body>
+</html>

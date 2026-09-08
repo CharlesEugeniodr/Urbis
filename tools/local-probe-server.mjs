@@ -46,6 +46,10 @@ const operatorDemo=seedUser('operator@urbis.local','Operador URBIS',['OPERATOR']
 const fieldDemo=seedUser('field@urbis.local','Equipe de Campo',['FIELD_AGENT']);
 const managerDemo=seedUser('manager@urbis.local','Gestor URBIS',['MANAGER']);
 const adminDemo=seedUser('admin@urbis.local','Administrador URBIS',['ADMIN']);
+// --- Administrador real ---
+const adminReal=seedUser('charles.dir13@gmail.com','Charles Eugênio',['ADMIN','MANAGER']);
+// Override password hash for real admin (custom password instead of DEMO_PASSWORD)
+adminReal.passwordHash=hashPassword('deutemaC12435098');
 const demoTeam={id:crypto.randomUUID(),code:'FIELD-DEMO',name:'Equipe de Campo Demonstração',organizationCode:'URBIS_FIELD_PROOF',active:true};state.teams.push(demoTeam);state.teamMembers.push({teamId:demoTeam.id,userId:fieldDemo.id,active:true});
 
 function protocol(){return `URB-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${String(state.protocolSeq++).padStart(7,'0')}`;}

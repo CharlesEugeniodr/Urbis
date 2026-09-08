@@ -1,25 +1,40 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'package:geolocator/geolocator.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'core/api_client.dart';
+import 'core/auth_store.dart';
+import 'core/theme.dart';
+import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
 
-void main()=>runApp(const UrbisFieldApp());
-class UrbisFieldApp extends StatelessWidget{const UrbisFieldApp({super.key});@override Widget build(BuildContext c)=>MaterialApp(title:'URBIS Campo',theme:ThemeData(useMaterial3:true,colorSchemeSeed:const Color(0xFF07507C)),home:const FieldHome());}
-class FieldHome extends StatefulWidget{const FieldHome({super.key});@override State<FieldHome> createState()=>_FieldHomeState();}
-class _FieldHomeState extends State<FieldHome>{
-  final base=const String.fromEnvironment('URBIS_API_URL',defaultValue:'http://10.0.2.2:3100');final storage=const FlutterSecureStorage();final email=TextEditingController();final password=TextEditingController();String token='';List orders=[];String status='Entre com a credencial da equipe.';
-  Future<Map<String,dynamic>> call(String path,{String method='GET',Map<String,dynamic>? body})async{final h={'content-type':'application/json',if(token.isNotEmpty)'authorization':'Bearer $token'};final r=await (method=='POST'?http.post(Uri.parse('$base$path'),headers:h,body:jsonEncode(body??{})):http.get(Uri.parse('$base$path'),headers:h));final j=jsonDecode(r.body);if(r.statusCode>=400)throw Exception(j['error']??r.statusCode);return Map<String,dynamic>.from(j);}
-  Future<void> setupPush()async{try{await Firebase.initializeApp();await FirebaseMessaging.instance.requestPermission(alert:true,badge:true,sound:true);final t=await FirebaseMessaging.instance.getToken();if(t!=null&&t.isNotEmpty){final platform=kIsWeb?'WEB':defaultTargetPlatform==TargetPlatform.iOS?'IOS':'ANDROID';await call('/v1/me/devices',method:'POST',body:{'token':t,'platform':platform});}FirebaseMessaging.onMessage.listen((m){if(mounted)setState(()=>status=m.notification?.title??'Nova ordem/atualização URBIS');});}catch(_){}}
-  Future<Position> locate()async{var p=await Geolocator.checkPermission();if(p==LocationPermission.denied)p=await Geolocator.requestPermission();if(p==LocationPermission.denied||p==LocationPermission.deniedForever)throw Exception('Permissão de localização negada');return Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.high);}
-  Future<void> login()async{try{final j=await call('/v1/auth/login',method:'POST',body:{'email':email.text.trim(),'password':password.text});token=j['accessToken'];await storage.write(key:'urbis_field_token',value:token);await setupPush();await load();}catch(e){setState(()=>status=e.toString());}}
-  Future<void> load()async{final j=await call('/v1/field/work-orders');setState((){orders=List.from(j['records']??[]);status='${orders.length} ordem(ns) atribuída(s).';});}
-  Future<void> update(String id,String s)async{try{Position? p;if(['ARRIVED','IN_PROGRESS','COMPLETED'].contains(s))p=await locate();await call('/v1/field/work-orders/$id/status',method:'POST',body:{'status':s,'latitude':p?.latitude,'longitude':p?.longitude});await load();}catch(e){setState(()=>status=e.toString());}}
-  Future<void> route(String id)async{try{final p=await locate();final j=await call('/v1/field/work-orders/$id/route?lat=${p.latitude}&lon=${p.longitude}');setState(()=>status='Rota ${j['provider']} • distância ${((j['distanceM']??0) as num).toStringAsFixed(0)} m${j['durationS']!=null?' • ${(j['durationS']/60).toStringAsFixed(0)} min':''}');}catch(e){setState(()=>status=e.toString());}}
-  Future<void> evidence(String occurrenceId,String purpose)async{try{final p=await locate();final f=await ImagePicker().pickImage(source:ImageSource.camera,imageQuality:88);if(f==null)return;final bytes=await f.readAsBytes();await call('/v1/occurrences/$occurrenceId/evidence',method:'POST',body:{'filename':f.name,'mediaType':f.mimeType??'image/jpeg','dataBase64':base64Encode(bytes),'purpose':purpose,'capturedAt':DateTime.now().toUtc().toIso8601String(),'latitude':p.latitude,'longitude':p.longitude});setState(()=>status='Evidência $purpose enviada e íntegra por SHA-256.');}catch(e){setState(()=>status=e.toString());}}
-  @override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:const Text('URBIS Campo')),body:Padding(padding:const EdgeInsets.all(16),child:token.isEmpty?Column(crossAxisAlignment:CrossAxisAlignment.stretch,children:[const Text('Acesso restrito à equipe de campo.'),const SizedBox(height:12),TextField(controller:email,keyboardType:TextInputType.emailAddress,decoration:const InputDecoration(labelText:'E-mail')),TextField(controller:password,obscureText:true,decoration:const InputDecoration(labelText:'Senha')),const SizedBox(height:12),FilledButton(onPressed:login,child:const Text('Entrar')),Text(status)]):RefreshIndicator(onRefresh:load,child:ListView(children:[Text(status),...orders.map((w)=>Card(child:Padding(padding:const EdgeInsets.all(12),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('OS ${w['id']}',style:const TextStyle(fontWeight:FontWeight.bold)),Text('Status: ${w['status']}'),Wrap(spacing:8,runSpacing:4,children:[TextButton(onPressed:()=>route(w['id']),child:const Text('Rota')),TextButton(onPressed:()=>evidence(w['occurrenceId'],'BEFORE'),child:const Text('Foto antes')),TextButton(onPressed:()=>evidence(w['occurrenceId'],'AFTER'),child:const Text('Foto depois')),...['EN_ROUTE','ARRIVED','IN_PROGRESS','COMPLETED'].map((s)=>TextButton(onPressed:()=>update(w['id'],s),child:Text(s)))])])))]))));}
+void main() {
+  runApp(const UrbisFieldApp());
+}
+
+class UrbisFieldApp extends StatelessWidget {
+  const UrbisFieldApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider<ApiClient>(create: (_) => ApiClient()),
+        ChangeNotifierProxyProvider<ApiClient, AuthStore>(
+          create: (ctx) => AuthStore(ctx.read<ApiClient>()),
+          update: (_, api, auth) => auth ?? AuthStore(api),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'URBIS Campo',
+        theme: AppTheme.theme,
+        home: Consumer<AuthStore>(
+          builder: (context, auth, _) {
+            if (auth.isLoading) {
+              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            }
+            return auth.user != null ? const HomeScreen() : const LoginScreen();
+          },
+        ),
+      ),
+    );
+  }
 }
