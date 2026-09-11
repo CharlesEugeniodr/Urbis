@@ -135,3 +135,24 @@ jobs:
           kubectl -n urbis set image deployment/urbis-notification-worker worker=${NOTIFICATION_IMAGE}:${GITHUB_SHA}
       - name: Wait for API rollout
         run: kubectl -n urbis rollout status deployment/urbis-api --timeout=180s
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: grafana/setup-k6-action@v1
+      - name: Validate staging realtime/API gates
+        env:
+          URBIS_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+          URBIS_WS_BASE_URL: ${{ secrets.STAGING_WS_BASE_URL }}
+          URBIS_CITIZEN_EMAIL: ${{ secrets.STAGING_CITIZEN_EMAIL }}
+          URBIS_OPERATOR_EMAIL: ${{ secrets.STAGING_OPERATOR_EMAIL }}
+          URBIS_TEST_PASSWORD: ${{ secrets.STAGING_TEST_PASSWORD }}
+          URBIS_TEST_LAT: ${{ secrets.STAGING_TEST_LAT }}
+          URBIS_TEST_LON: ${{ secrets.STAGING_TEST_LON }}
+        run: |
+          test -n "$URBIS_BASE_URL"
+          npm run test:staging:gates
+      - name: Validate staging load gate (k6)
+        env:
+          URBIS_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+        run: |
+          test -n "$URBIS_BASE_URL"
+          k6 run tests/performance/urbis-load.k6.js
