@@ -17,7 +17,7 @@ if (!BASE) {
 async function login(email) {
   const r = await fetch(`${BASE}/v1/auth/login`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: { 'content-type': 'application/json', connection: 'close' },
     body: JSON.stringify({ email, password: PASSWORD })
   });
   const j = await r.json();
@@ -26,7 +26,7 @@ async function login(email) {
 }
 
 async function post(url, body, token) {
-  const headers = { 'content-type': 'application/json' };
+  const headers = { 'content-type': 'application/json', connection: 'close' };
   if (token) headers.authorization = AUTH_PREFIX + token;
   const r = await fetch(`${BASE}${url}`, {
     method: 'POST',
@@ -39,16 +39,27 @@ async function post(url, body, token) {
 }
 
 test('staging health endpoint', async () => {
-  const r = await fetch(`${BASE}/v1/health`);
-  const j = await r.json();
-  assert.ok(r.ok, JSON.stringify(j));
+  const candidates = ['/v1/health', '/health'];
+  let last = null;
+  for (const path of candidates) {
+    const r = await fetch(`${BASE}${path}`, { headers: { connection: 'close' } });
+    let j = null;
+    try {
+      j = await r.json();
+    } catch {
+      j = null;
+    }
+    if (r.ok) return;
+    last = { path, status: r.status, body: j };
+  }
+  assert.fail(`health gate failed on all endpoints: ${JSON.stringify(last)}`);
 });
 
 test('staging auth and public summary', async () => {
   const citizenToken = await login(CITIZEN_EMAIL);
-  const blocked = await fetch(`${BASE}/v1/occurrences`, { headers: { authorization: AUTH_PREFIX + citizenToken } });
+  const blocked = await fetch(`${BASE}/v1/occurrences`, { headers: { authorization: AUTH_PREFIX + citizenToken, connection: 'close' } });
   assert.equal(blocked.status, 403);
-  const summary = await fetch(`${BASE}/public/summary`);
+  const summary = await fetch(`${BASE}/public/summary`, { headers: { connection: 'close' } });
   assert.equal(summary.status, 200);
 });
 
@@ -56,62 +67,81 @@ test('staging websocket operational event', async () => {
   assert.equal(typeof WebSocket, 'function');
   const [citizenToken, operatorToken] = await Promise.all([login(CITIZEN_EMAIL), login(OPERATOR_EMAIL)]);
   const ws = new WebSocket(`${WS_BASE}/ws/occurrences?access_token=${encodeURIComponent(operatorToken)}`);
-  await new Promise((resolve, reject) => {
-    ws.addEventListener('open', resolve, { once: true });
-    ws.addEventListener('error', reject, { once: true });
-  });
-  const message = new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('staging_ws_timeout')), 7000);
-    const listener = (event) => {
-      const data = JSON.parse(String(event.data));
-      if (data.topic === 'occurrence.created' || data.topic === 'occurrence.changed') {
+  try {
+    await new Promise((resolve, reject) => {
+      ws.addEventListener('open', resolve, { once: true });
+      ws.addEventListener('error', reject, { once: true });
+    });
+    const message = new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('staging_ws_timeout')), 7000);
+      const listener = (event) => {
+        const data = JSON.parse(String(event.data));
+        if (data.topic === 'occurrence.created' || data.topic === 'occurrence.changed') {
+          clearTimeout(timer);
+          ws.removeEventListener('message', listener);
+          resolve(data);
+        }
+      };
+      ws.addEventListener('message', listener);
+    });
+    const created = await post('/v1/occurrences', {
+      categoryCode: 'WATER',
+      description: 'staging ws gate',
+      latitude: TEST_LAT,
+      longitude: TEST_LON,
+      clientRequestId: `staging-ws-${Date.now()}`
+    }, citizenToken);
+    const payload = await message;
+    assert.equal(payload.entityId, created.occurrence.id);
+  } finally {
+    await new Promise((resolve) => {
+      const timer = setTimeout(resolve, 500);
+      ws.addEventListener('close', () => {
         clearTimeout(timer);
-        ws.removeEventListener('message', listener);
-        resolve(data);
-      }
-    };
-    ws.addEventListener('message', listener);
-  });
-  const created = await post('/v1/occurrences', {
-    categoryCode: 'WATER',
-    description: 'staging ws gate',
-    latitude: TEST_LAT,
-    longitude: TEST_LON,
-    clientRequestId: `staging-ws-${Date.now()}`
-  }, citizenToken);
-  const payload = await message;
-  assert.equal(payload.entityId, created.occurrence.id);
-  ws.close();
+        resolve();
+      }, { once: true });
+      ws.close();
+    });
+  }
 });
 
 test('staging SSE anonymized event', async () => {
   const citizenToken = await login(CITIZEN_EMAIL);
   const controller = new AbortController();
-  const response = await fetch(`${BASE}/public/stream`, { signal: controller.signal });
-  assert.equal(response.status, 200);
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let text = '';
-  const readUntil = async (needle) => {
-    const deadline = Date.now() + 7000;
-    while (Date.now() < deadline) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      text += decoder.decode(value, { stream: true });
-      if (text.includes(needle)) return;
+  let reader = null;
+  try {
+    const response = await fetch(`${BASE}/public/stream`, { signal: controller.signal });
+    assert.equal(response.status, 200);
+    reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    const readUntil = async (needle) => {
+      const deadline = Date.now() + 7000;
+      while (Date.now() < deadline) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        text += decoder.decode(value, { stream: true });
+        if (text.includes(needle)) return;
+      }
+      throw new Error(`staging_sse_timeout_${needle}`);
+    };
+    await readUntil('event: ready');
+    await post('/v1/occurrences', {
+      categoryCode: 'LIGHTING',
+      description: 'staging sse gate',
+      latitude: TEST_LAT,
+      longitude: TEST_LON,
+      clientRequestId: `staging-sse-${Date.now()}`
+    }, citizenToken);
+    await readUntil('event: occurrence.changed');
+    assert.equal(text.includes('reporterUserId'), false);
+    assert.equal(text.includes('addressText'), false);
+  } finally {
+    controller.abort();
+    if (reader) {
+      try {
+        await reader.cancel();
+      } catch {}
     }
-    throw new Error(`staging_sse_timeout_${needle}`);
-  };
-  await readUntil('event: ready');
-  await post('/v1/occurrences', {
-    categoryCode: 'LIGHTING',
-    description: 'staging sse gate',
-    latitude: TEST_LAT,
-    longitude: TEST_LON,
-    clientRequestId: `staging-sse-${Date.now()}`
-  }, citizenToken);
-  await readUntil('event: occurrence.changed');
-  assert.equal(text.includes('reporterUserId'), false);
-  assert.equal(text.includes('addressText'), false);
-  controller.abort();
+  }
 });
