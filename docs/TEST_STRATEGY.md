@@ -16,6 +16,8 @@ Cobertura do núcleo via Node test coverage: **93,30% de linhas**, **89,38% de f
 npm run test:all
 npm run test:coverage
 node tests/performance/local-load.mjs
+npm run test:staging:gates
 ```
 
 O cenário staging está em `tests/performance/urbis-load.k6.js`.
+As validações de homologação integrada (API + WebSocket + SSE) estão em `tests/staging/staging-gates.test.mjs`.
