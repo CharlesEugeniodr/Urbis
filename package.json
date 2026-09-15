@@ -15,7 +15,8 @@
     "test:business": "node --test tests/business-core.test.mjs",
     "test:reporting": "node --test tests/reporting-core.test.mjs",
     "test:coverage": "node --experimental-test-coverage --test tests/risk-engine.test.mjs tests/operation-core.test.mjs tests/security-evidence.test.mjs tests/business-core.test.mjs tests/reporting-core.test.mjs",
-    "test:release": "python scripts/validate_release.py"
+    "test:release": "python scripts/validate_release.py",
+    "test:staging:gates": "node --test --test-force-exit tests/staging/staging-gates.test.mjs"
   },
   "engines": {
     "node": ">=20"

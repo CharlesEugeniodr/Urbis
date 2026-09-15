@@ -38,6 +38,13 @@ Esta versão consolida sem regressão os blocos v0.1–v0.4 e incorpora os requi
 
 A infraestrutura e pipelines necessários estão presentes no pacote. A ausência de execução local desses componentes não é apresentada como aprovação.
 
+## Gating de homologação implementado no repositório
+
+- teste automatizado de homologação remota para API/WebSocket/SSE em `tests/staging/staging-gates.test.mjs`;
+- comando dedicado: `npm run test:staging:gates`;
+- execução no pipeline de `staging` após rollout da API, junto ao cenário k6;
+- plano de execução em fases/go-no-go documentado em `docs/EXECUTION_PLAN_PHASES.md`.
+
 ## Testes executados no fechamento
 
 - PLANCON: 6/6;
